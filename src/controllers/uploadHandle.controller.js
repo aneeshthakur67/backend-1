@@ -4,26 +4,26 @@ import bcrypt from "bcrypt";
 import { asyncHandler } from "../utils/asyncHandle.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 import { ApiError } from "../utils/apiError.js";
-let uploadHandle = asyncHandler(async (req, res) => {
-  // console.log(req.file);
-  let user = "one";
+let uploadHandle = async (req, res) => {
   let path = req.file.path;
-  // console.log(path);
   let actualPath = path.replaceAll("\\", "/");
-  console.log(actualPath);
   let imageurl = await uploadOnCloudinary(actualPath);
-  let imgsrc = imageurl.secure_url;
-
-  await User.create({
-    name: user,
-    image: imgsrc,
+  let user = await User.findById(req.user._id);
+  user.image.push({
+    url: imageurl.url,
+    public_id: imageurl.public_id,
+    title: req.body.title,
   });
-
+  await user.save();
   res.json({
     status: 201,
     message: "Image uploaded successfully",
   });
-});
+};
+
+export const getUserGallery = async (req, res) => {
+  res.status(200).json(new ApiResponse(200, req.user, "user existed"));
+};
 
 let createToken = async (id) => {
   let user = await User.findById(id);
@@ -73,12 +73,10 @@ let loginUser = async (req, res) => {
 };
 
 let registerUser = async (req, res) => {
-  let { name, email, password } = req.body;
-
+  const { name, email, password } = req.body;
   if (!(name && email && password)) throw new Error("enter all fields");
-
   let existedUser = await User.findOne({ email });
-
+  console.log(email);
   if (existedUser) throw new Error("User already existed");
 
   console.log("this is the updated pass:", password);

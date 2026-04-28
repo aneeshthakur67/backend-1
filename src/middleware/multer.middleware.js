@@ -3,14 +3,11 @@ import multer from "multer";
 
 let storage = multer.diskStorage({
     destination:function(req,file,cb){
-        cb(null,"./upload")
-        // console.log(file);
-        
+        cb(null,"./uploads")
+
     },
     filename:function(req,file,cb){
         cb(null,`${Date.now()}-${file.originalname}`)
-        // console.log(file);
-        
     }
 })
 

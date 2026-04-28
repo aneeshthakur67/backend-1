@@ -3,12 +3,12 @@ import fs from "fs"
 import dotenv from "dotenv";
 import { fileURLToPath } from "url";
 dotenv.config()
-console.log(process.env.CLOUD_API);
+console.log(process.env.CLOUD_API_KEY);
 
 
 cloudinary.config({
     cloud_name:process.env.CLOUD_NAME,
-    api_key:process.env.CLOUD_API,
+    api_key:process.env.CLOUD_API_KEY,
     api_secret:process.env.CLOUD_SECRET
 })
 

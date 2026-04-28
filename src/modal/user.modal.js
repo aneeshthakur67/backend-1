@@ -9,6 +9,13 @@ let userSchema = new Schema(
     email: String,
     password: String,
     refreshToken: String,
+    image: [
+      {
+        url: String,
+        public_id: String,
+        title: String,
+      },
+    ],
   },
   { timestamps: true },
 );
